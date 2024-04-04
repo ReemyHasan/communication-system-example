@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\PhoneNumber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -14,7 +15,7 @@ class SendTwoFactorCode extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(public PhoneNumber $phone_number)
     {
         //
     }
@@ -35,7 +36,7 @@ class SendTwoFactorCode extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line("Your two-factor code is {$notifiable->two_factor_code}")
+            ->line("Your two-factor code for the phone number {$this->phone_number->phone_number} is {$this->phone_number->two_factor_code}")
             ->action('Verify Here', 'http://127.0.0.1:8000/api/v1/verify')
             ->line('The code will expire in 10 minutes')
             ->line('If you didn\'t request this, please ignore.');

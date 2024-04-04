@@ -14,9 +14,9 @@ class TwoFactorController extends Controller
     public function send(send2FACode $request)
     {
         $validated = $request->validated();
-        $user = PhoneNumber::where('phone_number',$validated['phone_number'])->first()->user;
-        $user->generateTwoFactorCode();
-        $user->notify(new SendTwoFactorCode());
+        $phone_number = PhoneNumber::where('phone_number',$validated['phone_number'])->first();
+        $phone_number->generateTwoFactorCode();
+        $phone_number->user->notify(new SendTwoFactorCode($phone_number));
         return $this->sudResponse('Code has been sent');
     }
 }
