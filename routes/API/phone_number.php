@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\PhoneNumberController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::post('add_to_balance', [UserController::class,'AddToBalance']);
-Route::get('my_phone_numbers', [UserController::class,'myPhoneNumbers']);
-Route::get('get_my_balance', [UserController::class,'getMyBalance']);
+Route::post('add_to_balance', [PhoneNumberController::class,'AddToBalance']);
+Route::get('my_phone_numbers', [PhoneNumberController::class,'myPhoneNumbers']);
+Route::get('get_my_balance', [PhoneNumberController::class,'getMyBalance']);
 
 
 

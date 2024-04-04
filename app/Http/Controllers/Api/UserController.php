@@ -4,35 +4,58 @@ namespace App\Http\Controllers\Api;
 
 use App\Contracts\Responses;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\AddTOBalanceRequest;
 use App\Models\PhoneNumber;
-use Illuminate\Http\Request;
 
+use App\Http\Requests\PhoneNumber\BuyNumberRequest;
+use App\Models\PhoneNumberBackup;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     use Responses;
-    public function AddToBalance(AddTOBalanceRequest $request)
+    public function buyMobileNumber(BuyNumberRequest $request)
     {
-        $validated = $request->validated();
-        $phone_number = PhoneNumber::where('phone_number',$validated['phone_number'])->first();
-        $new_balance = $phone_number->balance + $validated['amount'];
-        $phone_number->forceFill(['balance'=> $new_balance ]);
-        $phone_number->update();
-        return $this->sudResponse('amount has been added to the provided number');
 
+        return DB::transaction(function () use ($request) {
+            $validated = $request->validated();
+
+            $user = User::where('identification_number', $request->identification_number)->first();
+            if ($user && $user->phoneNumbers->count() >= 4) {
+                return $this->sudResponse('User has reached the maximum allowed mobile numbers.', 422);
+            }
+            if (!$user) {
+                $user = User::create($validated);
+            }
+            $mobileNumber = PhoneNumberBackup::where('sold', false)->first();
+            $binCode = $this->generateUniqueBINCode();
+
+            $phoneNumber = new PhoneNumber;
+
+            $phoneNumber->forceCreate( [
+                'phone_number' => $mobileNumber->number,
+                'user_id' => $user->id,
+                'bin_code' => $binCode,
+            ]);
+            $mobileNumber->forceFill(['sold'=>true]);
+            $mobileNumber->update();
+
+            return $this->indexOrShowResponse('your phone number', [
+                'message' => 'Mobile number purchased successfully.',
+                'mobile_number' => $mobileNumber->number,
+                'bin_code' => $binCode,
+            ], 200);
+        });
     }
 
-    public function myPhoneNumbers(Request $request)
+    private function generateUniqueBINCode()
     {
-        $user = PhoneNumber::where('phone_number',$request['phone_number'])->first()->user;
-        $phone_numbers = $user->phoneNumbers->pluck('balance','phone_number');
-        return $this->indexOrShowResponse('phone_numbers',['count'=>$phone_numbers->count(),'phone_numbers'=>$phone_numbers]);
+        $binCodes = PhoneNumber::pluck('bin_code');
+        $binCode = bin2hex(random_bytes(4));
+        while ($binCodes->contains($binCode)) {
+            $binCode = bin2hex(random_bytes(4));
+        }
 
+        return $binCode;
     }
-    public function getMyBalance(Request $request)
-    {
-        $balance = PhoneNumber::where('phone_number',$request['phone_number'])->first('balance');
-        return $this->indexOrShowResponse('your balance',$balance);
 
-    }
 }
