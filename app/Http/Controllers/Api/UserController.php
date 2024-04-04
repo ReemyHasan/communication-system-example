@@ -13,7 +13,6 @@ class UserController extends Controller
     use Responses;
     public function AddToBalance(AddTOBalanceRequest $request)
     {
-        // should be secure but here for testing purposes
         $validated = $request->validated();
         $phone_number = PhoneNumber::where('phone_number',$validated['phone_number'])->first();
         $new_balance = $phone_number->balance + $validated['amount'];
@@ -22,4 +21,13 @@ class UserController extends Controller
         return $this->sudResponse('amount has been added to the provided number');
 
     }
+
+    public function myPhoneNumbers(Request $request)
+    {
+        $user = PhoneNumber::where('phone_number',$request['phone_number'])->first()->user;
+        $phone_numbers = $user->phoneNumbers->pluck('balance','phone_number');
+        return $this->indexOrShowResponse('phone_numbers',['count'=>$phone_numbers->count(),'phone_numbers'=>$phone_numbers]);
+
+    }
+
 }
