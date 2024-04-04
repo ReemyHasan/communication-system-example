@@ -29,5 +29,10 @@ class UserController extends Controller
         return $this->indexOrShowResponse('phone_numbers',['count'=>$phone_numbers->count(),'phone_numbers'=>$phone_numbers]);
 
     }
+    public function getMyBalance(Request $request)
+    {
+        $balance = PhoneNumber::where('phone_number',$request['phone_number'])->first('balance');
+        return $this->indexOrShowResponse('your balance',$balance);
 
+    }
 }
