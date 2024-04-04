@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 trait Responses {
 
     // sud = store, update, destroy
-    public function sudResponse(string $message, int $code = 200) : JsonResponse {
+    public function sudResponse($message, int $code = 200) : JsonResponse {
         return response()->json([
             'message' => $message
         ], $code);
