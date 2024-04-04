@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\PhoneNumberController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('buy_phone_number', [PhoneNumberController::class,'buyMobileNumber']);
 
+Route::post('add_to_balance', [UserController::class,'AddToBalance']);
 
