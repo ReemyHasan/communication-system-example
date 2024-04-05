@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\OfferActivated;
+use App\Events\OfferUsedAmount;
 use App\Listeners\SendOfferActivationEmail;
+use App\Listeners\SendOfferUsedAmountEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OfferActivated::class => [
             SendOfferActivationEmail::class,
+        ],
+        OfferUsedAmount::class => [
+            SendOfferUsedAmountEmail::class,
         ]
     ];
 
