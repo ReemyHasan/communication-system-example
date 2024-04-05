@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OfferActivatedMail extends Mailable
+class OfferActivatedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -18,7 +18,6 @@ class OfferActivatedMail extends Mailable
      */
     public function __construct(public string $mess)
     {
-        //
     }
 
     /**

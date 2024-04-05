@@ -7,10 +7,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Queue\InteractsWithQueue;
 
-class SendTwoFactorCode extends Notification
+class SendTwoFactorCode extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use InteractsWithQueue, Queueable;
 
     /**
      * Create a new notification instance.

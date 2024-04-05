@@ -4,13 +4,14 @@ namespace App\Listeners;
 
 use App\Events\OfferActivated;
 use App\Mail\OfferActivatedMail;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class SendOfferActivationEmail implements ShouldQueue
 {
-    use InteractsWithQueue;
+    use InteractsWithQueue, Queueable;
     /**
      * Create the event listener.
      */
@@ -26,6 +27,6 @@ class SendOfferActivationEmail implements ShouldQueue
     {
         $phoneNumber = $event->phoneNumber;
         $user = $phoneNumber->user;
-        Mail::to($user->email)->send(new OfferActivatedMail($event->message));
+        Mail::to($user->email)->queue(new OfferActivatedMail($event->message));
     }
 }
