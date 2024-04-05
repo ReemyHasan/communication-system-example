@@ -22,7 +22,7 @@ class PhoneNumber extends Model
     {
         $this->timestamps = false;
         $two_factor_code = rand(100000, 999999);
-        $two_factor_expires_at = now()->addMinutes(10);
+        $two_factor_expires_at = now()->addMinutes(60);
         $this->forceFill(['two_factor_code'=>$two_factor_code,'two_factor_expires_at'=>$two_factor_expires_at]);
         $this->save();
     }
