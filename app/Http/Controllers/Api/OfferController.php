@@ -57,7 +57,8 @@ class OfferController extends Controller
                 $phoneOffer = $this->createPhoneOffer($phone_number, $offer);
                 $this->updatePhoneNumberBalance($phone_number, $offer);
 
-                event(new OfferActivated($phone_number, 'Offer ' . $offer->name . ' activated successfully'));
+                event(new OfferActivated($phone_number,
+                 'Offer ' . $offer->name . ' activated successfully and you got point bonuses '.$offer->bonus_points));
                 return $this->indexOrShowResponse(
                     'message',
                     'Offer activated successfully, check your email for more details'
