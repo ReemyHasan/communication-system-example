@@ -110,7 +110,7 @@ class OfferController extends Controller
         $phoneOffers = $phone_number->phoneOffers;
 
         $checkOffer = $phoneOffers->where('offer_id', $offer->id)->first();
-        if (($checkOffer != null && $checkOffer->expiration_date > now())) {
+        if ($checkOffer != null ) {
             return 'sorry, Failed request,reasons: you already activated the offer ' . $offer->name;
         }
 
